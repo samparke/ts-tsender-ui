@@ -1,6 +1,3 @@
-
-// from cyfrin
-
 export function calculateTotal(amounts: string): number { // inputs a string and returns a number. Similar to soldiity return functions
     const amountArray = amounts
         .split(/[,\n]+/) // converts "100\n200, 300" into ["100", "200", "300"]
