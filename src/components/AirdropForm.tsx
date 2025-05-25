@@ -46,8 +46,22 @@ export default function AirdropForm() {
         ],
     })
 
-    
 
+    const [showConfirmed, setShowConfirmed] = useState(false)
+    useEffect(() => {
+        if (isConfirmed){
+            setShowConfirmed(true)
+        }
+    }, [isConfirmed])
+
+    // change show confirmed back to false (transaction button back to send tokens) when an input value changes
+    useEffect(() => {
+        if (showConfirmed) {
+            setShowConfirmed(false)
+        }
+    }, [tokenAddress, recipients, amounts])
+
+    
     async function getApprovedAmount(tSenderAddress: string | null): Promise<number> {
         if (!tSenderAddress) {
             alert("not address found, please use a supported chain")
@@ -129,9 +143,10 @@ export default function AirdropForm() {
                 </div>
             )
         }
-        if (isConfirmed) {
-            return "Transaction confirmed."
+        if (showConfirmed) {
+            return "Transaction confirmed"
         }
+        return "Send tokens"
     }
 
 
@@ -168,9 +183,7 @@ export default function AirdropForm() {
 
 
     return(
-        <div className={"max-w-2xl min-w-full xl:min-w-lg w-full lg:mx-auto p-6 flex flex-col gap-6 bg-white rounded-xl ring-[4px] border-2"}>
-            
-            
+        <div className={"max-w-2xl min-w-full xl:min-w-lg w-full lg:mx-auto p-6 flex flex-col gap-6 bg-white rounded-xl ring-2"}>
              <div className="space-y-6"> 
                 <TextInput // input box
                 label="Token Address"
@@ -218,8 +231,10 @@ export default function AirdropForm() {
                     </div>
                 </div>
 
+
                 <button
-                    className={`cursor-pointer flex items-center justify-center w-full py-3 rounded-[9px] text-white transition-colors font-semibold relative border bg-blue-500 hover:bg-blue-600 border-blue-500"
+                    className={`cursor-pointer flex items-center justify-center w-full py-3 rounded-[9px] text-white transition-colors font-semibold relative border 
+                        ${showConfirmed? "bg-green-500 border-green-500 hover:bg-green-500" : "bg-blue-500 hover:bg-blue-600 border-blue-500"
                         } ${!hasEnoughTokens && tokenAddress ? "opacity-50 cursor-not-allowed" : ""}`}
                     onClick={handleSubmit}
                     disabled={isPending || (!hasEnoughTokens && tokenAddress !== "")}
@@ -230,11 +245,11 @@ export default function AirdropForm() {
                     <div className="absolute w-full inset-0 mix-blend-overlay z-10 inner-shadow rounded-lg" />
                     {/* White inner border */}
                     <div className="absolute w-full inset-0 mix-blend-overlay z-10 border-[1.5px] border-white/20 rounded-lg" />
-                    {isPending || error || isConfirming
+                    {isPending || error || isConfirming || isConfirmed
                         ? getButtonContent()
                         : !hasEnoughTokens && tokenAddress
                             ? "Insufficient token balance"
-                                : "Send Tokens"}
+                            : "Send Tokens"}
                 </button>
             </div>
         </div>
