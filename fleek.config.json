@@ -1,0 +1,9 @@
+{
+  "sites": [
+    {
+      "slug": "harsh-nail-teeny",
+      "distDir": "./out",
+      "buildCommand": "npm run build"
+    }
+  ]
+}
